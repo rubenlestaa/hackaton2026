@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium AI App</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="description" content="A premium AI app frontend">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Main Content Area -->
+        <main class="content-area">
+
+            <!-- View 1: Home (Idea.jpeg left side) -->
+            <section id="home-view" class="view active-view">
+                <h1 hidden>Inicio - Premium AI App</h1>
+                <div class="logo-container">
+                    <img src="assets/Logo.png" alt="Brain Logo" class="main-logo" id="main-logo-img">
+                </div>
+            </section>
+
+            <!-- View 2: Projects / Search (Idea.jpeg right side) -->
+            <section id="projects-view" class="view hidden-view">
+                <header class="top-bar">
+                    <input type="text" class="search-input" id="main-search-input"
+                        placeholder="Buscar o crear proyecto/idea..." autocomplete="off">
+                </header>
+                <div class="grid-container" id="projects-grid">
+                    <!-- 12 circles (3 columns, 4 rows) as sketched -->
+                    <div class="grid-item"></div>
+                    <div class="grid-item"></div>
+                    <div class="grid-item"></div>
+                    <div class="grid-item"></div>
+                    <div class="grid-item"></div>
+                    <div class="grid-item"></div>
+                    <div class="grid-item"></div>
+                    <div class="grid-item"></div>
+                    <div class="grid-item"></div>
+                    <div class="grid-item"></div>
+                    <div class="grid-item"></div>
+                    <div class="grid-item"></div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
