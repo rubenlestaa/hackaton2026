@@ -1,0 +1,8 @@
+ fastapi
+uvicorn[standard]
+sqlalchemy
+pydantic
+python-dotenv
+newspaper3k
+gitpython
+python-multipart
