@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+.git/
+demo.py
+chat.py
+check.py
+README.md

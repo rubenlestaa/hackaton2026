@@ -1,0 +1,67 @@
+services:
+
+  # ── MailHog (servidor SMTP falso para simular emails) ─────────────────────
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - "1025:1025"   # SMTP
+      - "8025:8025"   # Web UI  →  http://localhost:8025
+    restart: unless-stopped
+
+  # ── Servicio de IA (FastAPI + Ollama) ──────────────────────────────────────
+  ai-service:
+    build: ./ai-service
+    ports:
+      - "8001:8001"
+    environment:
+      # Ollama corre en el host, no en Docker → host.docker.internal
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - OLLAMA_MODEL=llama3.1:8b
+      - WHISPER_MODEL=base
+      - TZ=Europe/Madrid
+    extra_hosts:
+      - "host.docker.internal:host-gateway"   # Linux: mapea host.docker.internal → gateway
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8001/models', timeout=5)"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+
+  # ── Backend principal (FastAPI + SQLite) ───────────────────────────────────
+  backend:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - AI_SERVICE_URL=http://ai-service:8001
+      - GIT_PYTHON_REFRESH=quiet
+      - SMTP_HOST=mailhog
+      - SMTP_PORT=1025
+      - NOTIFY_EMAIL=usuario@hackudc.local
+      - TZ=Europe/Madrid
+    depends_on:
+      ai-service:
+        condition: service_healthy
+      mailhog:
+        condition: service_started
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8000/inbox', timeout=5)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ── Frontend (Node.js + Express) ───────────────────────────────────────────
+  frontend:
+    build: ./frontend
+    ports:
+      - "5002:5002"
+    environment:
+      - BACKEND_URL=http://backend:8000
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped

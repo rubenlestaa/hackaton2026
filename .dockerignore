@@ -1,0 +1,14 @@
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+.venv/
+.git/
+.gitignore
+data/brain.db
+data/vault/
+frontend/node_modules/
+ai-service/__pycache__/
+*.md
+Idea.jpeg
+run_all.py
