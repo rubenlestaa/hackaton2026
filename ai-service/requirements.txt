@@ -1,0 +1,19 @@
+# API y servidor
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+
+# Validación de datos
+pydantic>=2.7.0
+
+# Cliente HTTP para llamar a Ollama
+httpx>=0.27.0
+
+# Subida de ficheros (multipart/form-data) en FastAPI
+python-multipart>=0.0.9
+
+# Transcripción de audio con Whisper (local, sin GPU)
+# Requiere ffmpeg en el PATH: winget install ffmpeg
+faster-whisper>=1.0.0
+
+# Utilidades
+python-dotenv>=1.0.0

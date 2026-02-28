@@ -1,30 +1,13 @@
 #!/usr/bin/env node
 
 const express = require('express');
-const path = require('path');
-const config = require('./config');
+const path    = require('path');
+const config  = require('./config');
 
 const app = express();
-
-// Serve static files from the public directory
+app.use(express.json());
 app.use(express.static(path.join(__dirname, config.staticDir)));
 
-// Endpoint for frontend to get config and existing items
-app.get('/api/data', (req, res) => {
-    // Mock database output for now, just sending some existing items
-    const existingItems = [
-        { id: 1, name: "Proyecto IA" },
-        { id: 2, name: "Idea App" },
-        { id: 3, name: "Hackathon 2026" }
-    ];
-
-    res.json({
-        maxBubbles: config.maxBubbles,
-        items: existingItems
-    });
-});
-
-// Start the server
 app.listen(config.port, () => {
-    console.log(`Server is running at http://localhost:${config.port}`);
+    console.log(`Frontend  -> http://localhost:${config.port}`);
 });
