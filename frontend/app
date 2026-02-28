@@ -10,18 +10,37 @@ const app = express();
 app.use(express.static(path.join(__dirname, config.staticDir)));
 
 // Endpoint for frontend to get config and existing items
-app.get('/api/data', (req, res) => {
-    // Mock database output for now, just sending some existing items
-    const existingItems = [
-        { id: 1, name: "Proyecto IA" },
-        { id: 2, name: "Idea App" },
-        { id: 3, name: "Hackathon 2026" }
-    ];
+app.get('/api/data', async (req, res) => {
+    // Try to fetch real items from the backend; if it fails, fallback to mocked items
+    try {
+        const backendResp = await fetch(`${config.backendUrl}/inbox?status=pending`);
+        if (!backendResp.ok) throw new Error(`Backend responded ${backendResp.status}`);
+        const inboxItems = await backendResp.json();
 
-    res.json({
-        maxBubbles: config.maxBubbles,
-        items: existingItems
-    });
+        // Map backend inbox entries to the shape the frontend expects
+        const items = (inboxItems || []).map(entry => ({
+            id: entry.id,
+            name: entry.summary && entry.summary.length ? entry.summary : (entry.content ? entry.content.slice(0, 80) : `Entry ${entry.id}`)
+        }));
+
+        return res.json({
+            maxBubbles: config.maxBubbles,
+            items
+        });
+    } catch (err) {
+        console.error('Error fetching from backend, returning mock items:', err.message || err);
+        // Mock database output as fallback
+        const existingItems = [
+            { id: 1, name: "Proyecto IA" },
+            { id: 2, name: "Idea App" },
+            { id: 3, name: "Hackathon 2026" }
+        ];
+
+        return res.json({
+            maxBubbles: config.maxBubbles,
+            items: existingItems
+        });
+    }
 });
 
 // Start the server
