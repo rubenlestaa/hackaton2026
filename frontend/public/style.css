@@ -63,8 +63,30 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    padding: 48px;
+    padding: 24px 48px 48px 48px;
+    /* Adjusted top padding to make room for logo */
     transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header Logo */
+.top-logo-container {
+    width: 100%;
+    height: 80px;
+    /* Fixed height for header */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 0;
+    z-index: 5;
+    background: transparent;
+}
+
+.top-logo {
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 0 15px rgba(88, 166, 255, 0.2));
 }
 
 .hidden-view {
@@ -80,34 +102,12 @@ body {
     transition-delay: 0.2s;
 }
 
-/* Home View (View 1) */
-#home-view {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-}
-
-.logo-container {
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(88, 166, 255, 0.08) 0%, rgba(88, 166, 255, 0) 70%);
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    animation: floating 8s ease-in-out infinite;
+/* Make projects view flex to occupy remaining space */
+#projects-view {
     position: relative;
-}
-
-.logo-container::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border: 1px dashed rgba(88, 166, 255, 0.2);
-    animation: rotate 30s linear infinite;
+    flex-grow: 1;
+    height: calc(100% - 80px);
+    top: 80px;
 }
 
 .main-logo {
@@ -156,7 +156,7 @@ body {
     border: 1px solid var(--glass-border);
     display: flex;
     align-items: center;
-    padding: 0 24px;
+    padding: 0 16px 0 24px;
     margin-bottom: 40px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transition: box-shadow 0.3s ease;
@@ -185,14 +185,36 @@ body {
     color: rgba(240, 246, 252, 0.4);
 }
 
+.mic-button {
+    background: transparent;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+    opacity: 0.7;
+}
+
+.mic-button:hover {
+    background: var(--hover-bg);
+    color: var(--accent-color);
+    opacity: 1;
+}
+
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    /* responsive grid matching the request to add more bubbles if screen is large enough */
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     grid-gap: 40px;
     height: calc(100% - 104px);
     overflow-y: auto;
-    padding-bottom: 24px;
-    padding-right: 16px;
+    /* Added padding to prevent bubbles from being cut off during hover */
+    padding: 20px;
+    margin: -20px;
 }
 
 /* Custom Scrollbar */
@@ -221,11 +243,32 @@ body {
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     cursor: pointer;
     box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+}
+
+.item-text {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-color);
+    opacity: 0.8;
+    transition: all 0.3s ease;
+    word-break: break-word;
+    /* Allow long words to wrap if needed */
 }
 
 .grid-item:hover {
     background: var(--hover-bg);
-    transform: translateY(-8px) scale(1.02);
+    transform: translateY(-8px) scale(1.04);
     border-color: var(--accent-color);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), inset 0 0 15px rgba(88, 166, 255, 0.1);
+}
+
+.grid-item:hover .item-text {
+    opacity: 1;
+    color: var(--accent-color);
+    transform: scale(1.05);
 }

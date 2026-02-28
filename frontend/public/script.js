@@ -1,38 +1,42 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const homeView = document.getElementById('home-view');
-    const projectsView = document.getElementById('projects-view');
+    // Referencias a elementos
     const searchInput = document.getElementById('main-search-input');
+    const micButton = document.querySelector('.mic-button');
+    const projectsGrid = document.getElementById('projects-grid');
 
-    // Handle click on home view to transition to projects
-    homeView.addEventListener('click', () => {
-        // Hide the home view
-        homeView.classList.remove('active-view');
-        homeView.classList.add('hidden-view');
+    // Fetch existing projects/ideas and configuration from the local backend
+    fetch('/api/data')
+        .then(response => response.json())
+        .then(data => {
+            const maxBubbles = data.maxBubbles || 12; // Configurable limit
+            const items = data.items || [];
 
-        // Show the projects view with a stagger
-        setTimeout(() => {
-            projectsView.classList.remove('hidden-view');
-            projectsView.classList.add('active-view');
+            // Limit items to maxBubbles defined in config
+            const itemsToDisplay = items.slice(0, maxBubbles);
 
-            // Optionally focus the search/create input when arriving
-            setTimeout(() => {
-                searchInput.focus();
-            }, 600);
-        }, 50);
+            // Render existings items only
+            itemsToDisplay.forEach(item => {
+                const gridItem = document.createElement('div');
+                gridItem.classList.add('grid-item');
 
-        // Remove event listener as we don't go back
-        homeView.style.pointerEvents = 'none';
-    });
+                const itemText = document.createElement('span');
+                itemText.classList.add('item-text');
+                itemText.textContent = item.name || 'TEXTO';
 
-    // Add interactive click effect to grid items
-    const gridItems = document.querySelectorAll('.grid-item');
-    gridItems.forEach(item => {
-        item.addEventListener('click', function () {
-            // Simple pulse animation on click
-            this.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                this.style.transform = ''; // reset to hover state or default
-            }, 150);
-        });
-    });
+                gridItem.appendChild(itemText);
+                projectsGrid.appendChild(gridItem);
+
+                // Add interactive click effect logic wrapper
+                gridItem.addEventListener('click', function () {
+                    // Simple pulse animation on click
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = ''; // reset to hover state or default
+                    }, 150);
+                });
+            });
+        })
+        .catch(error => console.error("Error cargando configuración o items:", error));
+
+    // AQUI IRA LA FUNCIONALIDAD DE BACKEND PARA BUSCAR O CREAR IDEAS Y PROYECTOS
 });
